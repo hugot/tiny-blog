@@ -1,6 +1,6 @@
 <template>
   <div id="posts">
-    <button class="post-listing" v-for="post in posts">
+    <button class="post-listing" v-on:click="showPost(post.title)" v-for="post in posts">
        <h4>{{post.title}}</h4> 
        <div class="image-wrapper"><img src="" /></div>
        <br/>
@@ -28,6 +28,11 @@ export default {
   },
   data: function() {
     return { 'posts': {}};
+  },
+  methods: {
+    showPost: function (postName) {
+      this.$router.push('/post/' + postName)
+    }
   }
 }
 </script>

@@ -11,4 +11,12 @@ router.get('/posts', function (req, res) {
   });
 });
 
+router.get('/post', function (req, res) {
+  var post = {
+    title: 'Post titel',
+    content: 'Hallo dit is de content'
+  }
+  res.send(JSON.stringify(post));
+});
+
 module.exports = router;

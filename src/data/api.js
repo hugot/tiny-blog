@@ -22,8 +22,13 @@ function parseObjectFrom (address, callback) {
   });
 }
 
+function isCallBack (func) {
+  if (typeof func === 'function') return true;
+  else return false;
+}
+
 function getPosts (callback) {
-  if (typeof callback === 'function') {
+  if (isCallBack(callback)) {
     parseObjectFrom('posts', function (data) {
       callback(data.posts);
     });
@@ -32,6 +37,17 @@ function getPosts (callback) {
   }
 }
 
+function getPost (callback, postName) {
+  if (isCallBack(callback)) {
+    parseObjectFrom('post', function (data) {
+      callback(data);
+    });
+  } else {
+    console.error('getPost needs a callback');
+  }
+}
+
 module.exports = {
-  getPosts: getPosts
+  getPosts: getPosts,
+  getPost: getPost
 }
