@@ -1,50 +1,62 @@
 /**
  * Dit is een module waarmee data opgevraagd kan worden van de API
+ *
+ * English please?
  */
 
-function ajaxCall (method, address, readyStateAction) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(method, address, true);
-  xhr.onreadystatechange = function () {
-    if (this.readyState !== 4) return;
-    if (this.status !== 200) {
-      console.log('response geeft errorcode' + this.status);
-      return;
+/**
+ * [ajaxCall description]
+ * @param  {String} method    [A method used in the request]
+ * @param  {String} address   [An address used in the request]
+ * @return {Promise.<String>} [A promise resolving to the responseText of the request]
+ */
+function ajaxCall (method, address) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.open(method, address, true)
+    xhr.onreadystatechange = function () {
+      if (this.readyState !== 4) return
+      if (this.status !== 200) {
+        return console.log('response geeft errorcode' + this.status)
+      }
+      resolve(this.responseText)
     }
-    readyStateAction(this.responseText);
-  }
-  xhr.send();
+    xhr.send()
+  })
 }
 
-function parseObjectFrom (address, callback) {
-  ajaxCall('GET', '/api/' + address, function (responseText) {
-    callback(JSON.parse(responseText));
-  });
+/**
+ * [parseObjectFrom description]
+ * @param  {String} address     [An address used in the request]
+ * @return {Promise.<Object>}   [A promise resolving to an object]
+ */
+function parseObjectFrom (address) {
+  return new Promise((resolve, reject) => {
+    const responseText = await ajaxCall('GET', '/api/' + address)
+    resolve(JSON.parse(responseText))
+  })
 }
 
-function isCallBack (func) {
-  if (typeof func === 'function') return true;
-  else return false;
+/**
+ * [getPosts description]
+ * @return {Promise.<Object>}  [A promise resolving to an object]
+ */
+function getPosts () {
+  return new Promise((resolve, reject) => {
+    const data = await parseObjectFrom('posts')
+    resolve(data.posts)
+  })
 }
 
-function getPosts (callback) {
-  if (isCallBack(callback)) {
-    parseObjectFrom('posts', function (data) {
-      callback(data.posts);
-    });
-  } else {
-    console.error('getPosts needs a callback');
-  }
-}
-
-function getPost (callback, postName) {
-  if (isCallBack(callback)) {
-    parseObjectFrom('post', function (data) {
-      callback(data);
-    });
-  } else {
-    console.error('getPost needs a callback');
-  }
+/**
+ * [getPost description]
+ * @return {Promise.<Object>}  [A promise resolving to an object]
+ */
+function getPost (postName) {
+  return new Promise((resolve, reject) => {
+    const data = await parseObjectFrom('post')
+    resolve(data)
+  })
 }
 
 module.exports = {
